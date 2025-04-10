@@ -1,0 +1,29 @@
+.hero-section {
+    background: url('../../assets/publico.jpg') no-repeat center center;
+    background-size: cover;
+    height: 60vh; /* Aumentamos a altura para destacar a imagem */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    color: white;
+    text-align: center;
+}
+
+.overlay {
+    background: #1987549c; /* Fundo preto com transparência */
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    padding-top: 100px
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.lead {
+    font-size: 1.3rem;
+}
