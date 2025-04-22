@@ -8,7 +8,7 @@ function OrderSummary({ items, total }) {
                 <ListGroup variant="flush">
                     {items.map((item) => (
                         <ListGroup.Item key={item.id}>
-                            {item.name} - MTN {item.price.toFixed(2)}
+                            {item.name} - MTN {Number(item.price).toFixed(2)}
                         </ListGroup.Item>
                     ))}
                 </ListGroup>

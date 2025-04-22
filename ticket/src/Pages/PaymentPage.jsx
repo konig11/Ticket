@@ -8,7 +8,7 @@ import { generateTicketPDF } from '../utils/generateTicketPDF';
 
 function PaymentPage() {
     const location = useLocation();
-    const { product, quantity } = location.state || { product: { name: "Ingresso", price: 100 }, quantity: 1 };
+    const { product, quantity } = location.state || { product: { id: 99, name: "Ingresso", price: 100 }, quantity: 1 };
     const total = product.price * quantity;
 
     const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -16,11 +16,8 @@ function PaymentPage() {
 
     const handlePayment = async (paymentDetails) => {
         console.log("Detalhes do Pagamento:", paymentDetails);
-        setPaymentMethod(paymentDetails.method);
-        setPaymentSuccess(true);
-
-        // Simula geração do ticket
         const ticketId = Math.floor(Math.random() * 1000000);
+        const date = new Date().toISOString().slice(0, 19).replace('T', ' '); // formato SQL
 
         await generateTicketPDF({
             game: product,
@@ -28,6 +25,35 @@ function PaymentPage() {
             buyer: 'Cliente',
             ticketId
         });
+
+        // Enviar os dados para o backend
+        try {
+            const response = await fetch('http://localhost:3001/api/bilhetes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    code: ticketId,
+                    game: product.name,
+                    quantity,
+                    total,
+                    method: paymentDetails.method,
+                    date
+                })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                setPaymentMethod(paymentDetails.method);
+                setPaymentSuccess(true);
+            } else {
+                alert("Erro ao salvar bilhete.");
+            }
+        } catch (error) {
+            console.error("Erro ao salvar bilhete:", error);
+            alert("Erro na comunicação com o servidor.");
+        }
     };
 
     return (

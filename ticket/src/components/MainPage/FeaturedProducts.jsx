@@ -7,34 +7,24 @@ function FeaturedProducts() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setTimeout(() => {
-            const mockProducts = [
-                {
-                    id: 1,
-                    name: 'Mocambique X Marrocos - Bilhetes VIP',
-                    price: 120,
-                    flag1: './src/assets/mozambique.png',
-                    flag2: './src/assets/morocco.png'
-                },
-                {
-                    id: 2,
-                    name: 'Mocambique X Sudao - Bilhetes Normais',
-                    price: 80,
-                    flag1: './src/assets/mozambique.png',
-                    flag2: './src/assets/sudan.png'
-                },
-                {
-                    id: 3,
-                    name: 'Mocambique X Argelia - Bilhetes Normais',
-                    price: 50,
-                    flag1: './src/assets/mozambique.png',
-                    flag2: './src/assets/algeria.png'
-                }
-            ];
-            setFeaturedProducts(mockProducts);
-            setIsLoading(false);
-        }, 1000);
+        fetch('http://localhost:3001/api/bilhetes')
+            .then(response => response.json())
+            .then(data => {
+                // Adiciona o caminho das bandeiras se necessário
+                const updated = data.map(bilhete => ({
+                    ...bilhete,
+                    flag1: `./src/assets/${bilhete.flag1}`,
+                    flag2: `./src/assets/${bilhete.flag2}`
+                }));
+                setFeaturedProducts(updated);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error("Erro ao buscar bilhetes:", error);
+                setIsLoading(false);
+            });
     }, []);
+
 
     if (isLoading) {
         return <p className="text-center">Carregando bilhetes...</p>;
@@ -69,7 +59,7 @@ function FeaturedProducts() {
                                 <Card.Title>{product.name}</Card.Title>
 
                                 {/* Preço */}
-                                <Card.Text><strong>Preco:</strong>  {product.price} MTN</Card.Text>
+                                <Card.Text><strong>Preco:</strong>  {Number(product.price)} MTN</Card.Text>
 
                                 {/* Botão de compra */}
                                 <Link to={`/buy/${product.id}`} state={{ product }} className="btn btn-success">

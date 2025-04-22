@@ -25,6 +25,7 @@ export async function generateTicketPDF({ game, quantity, buyer = 'Cliente', tic
     doc.setFontSize(12);
     const lines = [
         `Comprador: ${buyer}`,
+        `TicketID: ${ticketId}`,
         `Jogo: ${game.name}`,
         `Quantidade: ${quantity}`,
         `Preco Total: ${game.price * quantity} MZN`,
