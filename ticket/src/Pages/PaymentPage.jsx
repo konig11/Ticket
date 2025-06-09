@@ -22,7 +22,7 @@ function PaymentPage() {
         await generateTicketPDF({
             game: product,
             quantity,
-            buyer: 'Cliente',
+            buyer: paymentDetails.completeName,
             ticketId
         });
 
@@ -39,7 +39,10 @@ function PaymentPage() {
                     quantity,
                     total,
                     method: paymentDetails.method,
-                    date
+                    date,
+                    dateGame: product.date_game,
+                    buyer: paymentDetails.completeName,
+                    email: paymentDetails.confirmEmail
                 })
             });
 

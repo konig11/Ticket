@@ -38,6 +38,7 @@ function FeaturedProducts() {
                     <Col key={product.id} md={4} className="mb-3">
                         <Card className="text-center shadow-sm">
                             <Card.Body>
+                               
                                 {/* Bandeiras dos países */}
                                 <div className="d-flex justify-content-center align-items-center mb-3">
                                     <img
@@ -54,12 +55,15 @@ function FeaturedProducts() {
                                         height="30"
                                     />
                                 </div>
+                                
 
                                 {/* Nome do Jogo */}
                                 <Card.Title>{product.name}</Card.Title>
-
+                         
                                 {/* Preço */}
                                 <Card.Text><strong>Preco:</strong>  {Number(product.price)} MTN</Card.Text>
+                                <span>       {/* Data do Jogo */}
+                                    <Card.Text className="text-center my-2 me-2"><strong>Dia d  o Jogo: </strong>{product.date_game.split("T")[0] + " " + product.date_game.split("T")[1].split(".")[0]}</Card.Text></span>
 
                                 {/* Botão de compra */}
                                 <Link to={`/buy/${product.id}`} state={{ product }} className="btn btn-success">
