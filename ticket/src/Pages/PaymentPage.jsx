@@ -40,9 +40,10 @@ function PaymentPage() {
                     total,
                     method: paymentDetails.method,
                     date,
-                    dateGame: product.date_game,
+                    
                     buyer: paymentDetails.completeName,
-                    email: paymentDetails.confirmEmail
+                    email: paymentDetails.confirmEmail,
+                    dateGame: product.date_game.split("T")[0] + " " + product.date_game.split("T")[1].split(".")[0]
                 })
             });
 

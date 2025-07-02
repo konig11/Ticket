@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
 
-function VerifyEmail(Email) {
-    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/
-return emailRegex.test(Email)
+function VerifyEmail(email) {
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+    return emailRegex.test(email);
 }
+
 function PaymentForm({ onPayment }) {
     const [paymentMethod, setPaymentMethod] = useState('card');
     const [cardNumber, setCardNumber] = useState('');
@@ -14,13 +15,18 @@ function PaymentForm({ onPayment }) {
     const [mpesaNumber, setMpesaNumber] = useState('');
     const [completeName, setCompleteName] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
+    const [emailValid, setEmailValid] = useState(true);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Simulação direta do pagamento, independente da validação
+        if (!VerifyEmail(confirmEmail)) {
+            setEmailValid(false);
+            return;
+        }
+
         if (paymentMethod === 'card') {
-            onPayment({ method: 'Cartao', completeName, confirmEmail, cardNumber,  expiry, cvv });
+            onPayment({ method: 'Cartao', completeName, confirmEmail, cardNumber, expiry, cvv });
         } else {
             onPayment({ method: 'M-Pesa', completeName, confirmEmail, mpesaNumber });
         }
@@ -29,6 +35,7 @@ function PaymentForm({ onPayment }) {
     return (
         <Form onSubmit={handleSubmit} className="p-3 border rounded shadow-sm">
             <h4 className="text-center mb-3">Escolha o Metodo de Pagamento</h4>
+
             <Form.Group className="mb-3">
                 <Form.Label>Nome Completo</Form.Label>
                 <Form.Control
@@ -37,17 +44,26 @@ function PaymentForm({ onPayment }) {
                     value={completeName}
                     onChange={(e) => setCompleteName(e.target.value)}
                     required
-                ></Form.Control>
+                />
             </Form.Group>
-            <Form.Group className='mb-3'>
+
+            <Form.Group className="mb-3">
                 <Form.Label>Email</Form.Label>
                 <Form.Control
-                    type="text"
+                    type="email"
                     placeholder="Escreva o seu email"
                     value={confirmEmail}
-                    onChange={(e) => setConfirmEmail(e.target.value)}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setConfirmEmail(value);
+                        setEmailValid(VerifyEmail(value));
+                    }}
+                    isInvalid={!emailValid}
                     required
-                ></Form.Control>
+                />
+                <Form.Control.Feedback type="invalid">
+                    Por favor, insira um email válido.
+                </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label>Metodo de Pagamento</Form.Label>
